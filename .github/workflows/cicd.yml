@@ -1,22 +1,31 @@
-name: Build,Analyze,scan
+name: Build, Analyze, Scan
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  build-analyze-scan:
-    name: Build
+  build:
+    name: Build Docker Image
     runs-on: [self-hosted]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Docker Build and push
+          fetch-depth: 0  # Retrieve full codebase for analysis
+
+      - name: Build and tag image
         run: |
           docker build -t webcow-app .
           docker tag webcow-app naresh3451213/webcow-app:latest
-          docker push naresh3451213/webcow-app:latest
+
+      - name: Push to registry (consider private registry for production)
         env:
-          DOCKER_CLI_ACI: 1
-   
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker push naresh3451213/webcow-app:latest
+
+  # Add additional jobs for analysis and scanning here
+  # These jobs can use tools like Trivy, Snyk, or Clair in Docker containers
