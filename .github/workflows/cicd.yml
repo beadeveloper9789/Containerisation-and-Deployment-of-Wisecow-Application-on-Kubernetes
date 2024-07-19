@@ -15,10 +15,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD}}
 
-
-
-
-
       - name: Docker Build and push
         run: |
           docker build -t tic-tac-toe .
