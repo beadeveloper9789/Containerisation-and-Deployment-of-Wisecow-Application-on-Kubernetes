@@ -12,28 +12,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Retrieve full codebase for analysis
-          
-       - name: Login to DockerHub
+          fetch-depth: 0
+
+      # Login step (only for non-dependabot pushes)
+      - name: Login to DockerHub (except dependabot)
         if: ${{ github.actor != 'dependabot[bot]' }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-    
 
       - name: Build and tag image
         run: |
           docker build -t webcow-app .
-          docker tag webcow-app naresh3451213/webcow-app:latest
+          docker tag webcow-app naresh3451234/webcow-app:latest
 
-      - name: Push to registry (consider private registry for production)
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push to registry (consider private registry)
         run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push naresh3451213/webcow-app:latest
+          docker push naresh3451234/webcow-app:latest
 
   # Add additional jobs for analysis and scanning here
-  # These jobs can use tools like Trivy, Snyk, or Clair in Docker containers
