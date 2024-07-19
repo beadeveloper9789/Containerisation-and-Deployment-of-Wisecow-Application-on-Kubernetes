@@ -16,7 +16,6 @@ jobs:
         run: |
           docker build -t webcow-app .
           docker tag webcow-app naresh3451213/webcow-app:latest
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
           docker push naresh3451213/webcow-app:latest
         env:
           DOCKER_CLI_ACI: 1
