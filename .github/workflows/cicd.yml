@@ -1,34 +1,26 @@
-name: Build, Analyze, Scan
+name: Build,Analyze,scan
 
 on:
   push:
     branches:
       - main
 
+
 jobs:
-  build:
-    name: Build Docker Image
+  build-analyze-scan:
+    name: Build
     runs-on: [self-hosted]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      # Login step (only for non-dependabot pushes)
-      - name: Login to DockerHub (except dependabot)
-        if: ${{ github.actor != 'dependabot[bot]' }}
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and tag image
+      - name: Docker Build and push
         run: |
-          docker build -t webcow-app .
-          docker tag webcow-app naresh3451234/webcow-app:latest
-
-      - name: Push to registry (consider private registry)
-        run: |
-          docker push naresh3451234/webcow-app:latest
-
-  # Add additional jobs for analysis and scanning here
+          docker build -t tic-tac-toe .
+          docker tag tic-tac-toe sevenajay/tic-tac-toe:latest
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push naresh3451213/tic-tac-toe:latest
+        env:
+          DOCKER_CLI_ACI: 1
