@@ -27,22 +27,32 @@ jobs:
 
 
 
+  
   deploy:  # Consider a separate job for deployment
     name: Deploy to Kubernetes
     runs-on: [self-hosted]
     needs: build  # Or analyze if included
     steps:
+      - uses: actions/checkout@v2
+
+
       - name: Pull Deployment Image
         run: docker pull naresh3451213/wisecow-app:latest
         
       - name: Deploy to container
-        run: docker run -d --name wisecow -p 4000:4000 naresh3451213/wisecow-app:latest
+        run: docker run -d --name wiase -p 5100:5100 naresh3451213/wisecow-app:latest
 
-      - name: Update kubeconfig
+      - name: Install AWS CLI
+        run: |
+          curl -sL https://awscli.aws.amazon.com/awscli-v2.7.19/linux/x86_64/aws-cli.zip -o aws-cli.zip
+          unzip aws-cli.zip
+          ./aws/install --region us-west-1
+
+      - name: Update Kubeconfig
         run: aws eks --region us-west-1 update-kubeconfig --name EKS_CLOUD
 
-      - name: Deploy to kubernetes
-        run: kubectl apply -f wisecow-deployment.yaml
+      - name: Deploy to Kubernetes
+        run: kubectl apply -f wisecow-deployment.yml
         
        
   
