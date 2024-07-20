@@ -21,8 +21,8 @@ jobs:
 
       - name: Build and Push Image
         run: |
-          docker build -t naresh3451213/wisecow-app:latest .
-          docker push naresh3451213/wisecow-app:latest
+          docker build -t ramnan/wisecow-app:latest .
+          docker push ramnan/wisecow-app:latest
           
 
 
@@ -37,10 +37,10 @@ jobs:
 
 
       - name: Pull Deployment Image
-        run: docker pull naresh3451213/wisecow-app:latest
+        run: docker pull ramnan/wisecow-app:latest
         
       - name: Deploy to container
-        run: docker run -d --name craneapp -p 7000:7000 naresh3451213/wisecow-app:latest
+        run: docker run -d --name craneapp -p 7000:7000 ramnan/wisecow-app:latest
 
      
 
