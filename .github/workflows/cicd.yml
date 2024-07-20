@@ -26,4 +26,19 @@ jobs:
 
 
 
+  deploy:  # Consider a separate job for deployment
+    name: Deploy to Kubernetes
+    runs-on: [self-hosted]
+    needs: build  # Or analyze if included
+    steps:
+      - name: Pull Deployment Image
+        run: docker pull naresh3451213/wisecow-app:latest
+
+      - name: Update Kubeconfig
+        run: aws eks --region us-east-1 update-kubeconfig --name EKS_CLOUD
+
+      - name: Deploy to Kubernetes
+        run: kubectl apply -f wisecow-deployment.yml
+
+
  
