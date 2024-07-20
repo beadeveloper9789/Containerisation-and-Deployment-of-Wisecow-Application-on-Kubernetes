@@ -40,7 +40,7 @@ jobs:
         run: docker pull naresh3451213/wisecow-app:latest
         
       - name: Deploy to container
-        run: docker run -d --name wiase -p 5100:5100 naresh3451213/wisecow-app:latest
+        run: docker run -d --name cicd -p 5110:5110 naresh3451213/wisecow-app:latest
 
      
 
