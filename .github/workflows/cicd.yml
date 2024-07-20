@@ -36,7 +36,7 @@ jobs:
         run: docker pull naresh3451213/wisecow-app:latest
         
       - name: Deploy to container
-        run: docker run -d --name game -p 3000:3000 naresh3451213/wisecow-app:latest
+        run: docker run -d --name wisecow -p 4000:4000 naresh3451213/wisecow-app:latest
 
       - name: Update kubeconfig
         run: aws eks --region us-west-1 update-kubeconfig --name EKS_CLOUD
