@@ -23,6 +23,7 @@ jobs:
         run: |
           docker build -t naresh3451213/wisecow-app:latest .
           docker push naresh3451213/wisecow-app:latest
+          
 
 
 
@@ -33,12 +34,19 @@ jobs:
     steps:
       - name: Pull Deployment Image
         run: docker pull naresh3451213/wisecow-app:latest
+        
+      - name: Deploy to container
+        run: docker run -d --name game -p 3000:3000 sevenajay/tic-tac-toe:latest
 
-      - name: Update Kubeconfig
-        run: aws eks --region us-east-1 update-kubeconfig --name EKS_CLOUD
+      - name: Update kubeconfig
+        run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
 
-      - name: Deploy to Kubernetes
-        run: kubectl apply -f wisecow-deployment.yml
+      - name: Deploy to kubernetes
+        run: kubectl apply -f deployment-service.yml
+        
+       
+  
 
+   
 
  
