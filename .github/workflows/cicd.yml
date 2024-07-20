@@ -40,7 +40,7 @@ jobs:
         run: docker pull ramnan/wisecow-app:latest
         
       - name: Deploy to container
-        run: docker run -d --name webbbapp -p 7000:7000 ramnan/wisecow-app:latest
+        run: docker run -d --name webbbaapp -p 1230:1230 ramnan/wisecow-app:latest
 
      
 
