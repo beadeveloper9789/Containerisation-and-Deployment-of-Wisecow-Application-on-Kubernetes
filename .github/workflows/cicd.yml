@@ -1,36 +1,49 @@
-name: Build,Analyze,scan
-
 on:
   push:
     branches:
       - main
 
-
 jobs:
-  build-analyze-scan:
-    name: Build
+  build:
+    name: Build Image
     runs-on: [self-hosted]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysi
+          fetch-depth: 0
 
-          
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD}}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-       
-      - name: Docker Build and push
+      - name: Build and Push Image
         run: |
-          docker build -t tic-tac-toe .
-          docker tag tic-tac-toe  naresh3451213/tic:latest   
-
-          
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+          docker build -t naresh3451213/tic:latest .
           docker push naresh3451213/tic:latest
-        env:
-          DOCKER_CLI_ACI: 1
+
+  analyze:
+    name: Analyze Image (Optional)
+    runs-on: [self-hosted]
+    needs: build
+    steps:
+      - name: Pull Image for Analysis
+        run: docker pull naresh3451213/tic:latest
+
+      - name: Run Trivy Scan (Example)
+        run: trivy image naresh3451213/tic:latest  # Save output to a file for further processing
+
+  deploy:  # Consider a separate job for deployment
+    name: Deploy to Kubernetes
+    runs-on: [self-hosted]
+    needs: build  # Or analyze if included
+    steps:
+      - name: Pull Deployment Image
+        run: docker pull sevenajay/tic-tac-toe:latest
+
+      - name: Update Kubeconfig
+        run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
+
+      - name: Deploy to Kubernetes
+        run: kubectl apply -f deployment-service.yml
