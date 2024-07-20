@@ -42,11 +42,7 @@ jobs:
       - name: Deploy to container
         run: docker run -d --name wiase -p 5100:5100 naresh3451213/wisecow-app:latest
 
-      - name: Install AWS CLI
-        run: |
-          curl -sL https://awscli.aws.amazon.com/awscli-v2.7.19/linux/x86_64/aws-cli.zip -o aws-cli.zip
-          unzip aws-cli.zip
-          ./aws/install --region us-west-1
+     
 
       - name: Update Kubeconfig
         run: aws eks --region us-west-1 update-kubeconfig --name EKS_CLOUD
