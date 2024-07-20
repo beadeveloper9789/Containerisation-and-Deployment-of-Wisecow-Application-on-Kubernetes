@@ -20,8 +20,8 @@ jobs:
 
       - name: Build and Push Image
         run: |
-          docker build -t naresh3451213/tic:latest .
-          docker push naresh3451213/tic:latest
+          docker build -t naresh3451213/wisecow-app:latest .
+          docker push naresh3451213/wisecow-app:latest
 
   analyze:
     name: Analyze Image (Optional)
@@ -29,10 +29,8 @@ jobs:
     needs: build
     steps:
       - name: Pull Image for Analysis
-        run: docker pull naresh3451213/tic:latest
+        run: docker pull naresh3451213/wisecow-app:latest
 
-      - name: Run Trivy Scan (Example)
-        run: trivy image naresh3451213/tic:latest  # Save output to a file for further processing
 
   deploy:  # Consider a separate job for deployment
     name: Deploy to Kubernetes
@@ -40,10 +38,10 @@ jobs:
     needs: build  # Or analyze if included
     steps:
       - name: Pull Deployment Image
-        run: docker pull sevenajay/tic-tac-toe:latest
+        run: docker pull naresh3451213/wisecow-app:latest
 
       - name: Update Kubeconfig
-        run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
+        run: aws eks --region us-east-1 update-kubeconfig --name EKS_CLOUD
 
       - name: Deploy to Kubernetes
         run: kubectl apply -f deployment-service.yml
