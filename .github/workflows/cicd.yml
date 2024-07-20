@@ -40,7 +40,7 @@ jobs:
         run: docker pull naresh3451213/wisecow-app:latest
         
       - name: Deploy to container
-        run: docker run -d --name cice -p 5111:5111 naresh3451213/wisecow-app:latest
+        run: docker run -d --name craneapp -p 7000:7000 naresh3451213/wisecow-app:latest
 
      
 
@@ -48,7 +48,7 @@ jobs:
         run: aws eks --region us-west-2 update-kubeconfig --name EKS_CLOUD
 
       - name: Deploy to Kubernetes
-        run: kubectl apply -f wisecow-deployment.yml
+        run: kubectl apply -f wisecow-deployment.yaml
         
        
   
